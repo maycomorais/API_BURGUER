@@ -3,17 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "./src/index.js",
+  "main": "./src/server.js",
   "scripts": {
-    "start": "node src/index",
-    "dev": "nodemon src/index"
+    "start": "node src/server",
+    "dev": "nodemon src/server"
   },
   "keywords": [],
-  "author": "",
+  "author": "Maycon Morais",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.18.1"
+    "express": "^4.18.1",
+    "mongoose": "^6.3.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.16",

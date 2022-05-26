@@ -1,8 +1,8 @@
+import burguerRouter from "./routes/burguer-router.js";
 import express from "express";
 import cors from "cors";
-import burguerRouter from "./routes/burguer-router.js";
 
-const port = 3007;
+
 
 const app = express();
 
@@ -15,6 +15,4 @@ app.get("/", (req, res) => {
 
 app.use("/burguers", burguerRouter);
 
-app.listen(port, () => {
-  console.log(`A aplicação está rodando na porta http://localhost:${port}`);
-});
+export default app;
