@@ -1,12 +1,15 @@
 import burguer from "../database/index.js";
+import Burguer from "../models/burguer-model.js";
 
 class BurguerServices {
-  listarTodos() {
-    if (burguer.length === 0) {
+  async listarTodos() {
+    const burguerMongo = await Burguer.find();
+
+    if (burguerMongo.length === 0) {
       throw { status: 404, message: "Nenhum produto encontrado" };
     }
 
-    return burguer;
+    return burguerMongo;
   }
 
   listarPorId({ id }) {

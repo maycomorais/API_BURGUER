@@ -3,9 +3,9 @@ import BurguerServices from "../services/buguer-service.js";
 const burguerServices = new BurguerServices();
 
 class BurguerControllers {
-  listarTodos(req, res) {
+  async listarTodos(req, res) {
     try {
-      const burguer = burguerServices.listarTodos();
+      const burguer = await burguerServices.listarTodos();
 
       res.send(burguer);
     } catch (error) {
