@@ -3,29 +3,35 @@ import BurguerServices from "../services/buguer-service.js";
 const burguerServices = new BurguerServices();
 
 class BurguerControllers {
+
+  // LISTAR TODAS AS PALETAS
   async listarTodos(req, res) {
     try {
-      const burguer = await burguerServices.listarTodos();
+      const burguers = await burguerServices.listarTodos();
 
-      res.send(burguer);
+      res.send(burguers);
     } catch (error) {
       res.status(error.status).send(error.message);
     }
   }
-  listarPorId(req, res) {
+
+  // Listar por ID
+  async listarPorId(req, res) {
     try {
-      const id = +req.params.id;
-      const burguer = burguerServices.listarPorId({ id });
+      const id = req.params.id;
+      const burguer = await burguerServices.listarPorId({ id });
       res.send(burguer);
     } catch (error) {
       res.status(error.status).send(error.message);
     }
   }
-  criarNovoBurguer(req, res) {
+
+  // CRIAR NOVA PALETA
+  async criarNovoBurguer(req, res) {
     const { nome, ingredientes, foto, preco, categoria } = req.body;
 
     try {
-      const novoBurguer = burguerServices.criarNovoBurguer({
+      const novoBurguer = await burguerServices.criarNovoBurguer({
         nome,
         ingredientes,
         foto,
@@ -35,16 +41,19 @@ class BurguerControllers {
 
       res.status(201).send(novoBurguer);
     } catch (error) {
-      res.status(error.status).send(error.message);
+      if (error.code === 11000) {
+        res.status(400).send('Item já cadastrado');
+      }
     }
-  }
-  refreshBurguer(req, res) {
+  };
+
+  async refreshBurguer(req, res) {
     const { nome, ingredientes, foto, preco, categoria } = req.body;
 
-    const id = +req.params.id;
+    const id = req.params.id;
 
     try {
-      const burguerRefresh = burguerServices.refreshBurguer({
+      const burguerRefresh = await burguerServices.refreshBurguer({
         id,
         nome,
         ingredientes,
@@ -59,11 +68,11 @@ class BurguerControllers {
     }
   }
   deleteBurguer(req, res) {
-    const id = +req.params.id;
+    const id = req.params.id;
 
-    burguerServices.deleteBurguer({ id });
+    const burguer = burguerServices.deleteBurguer({ id });
 
-    res.sendStatus(204);
+    res.status(200).send(burguer);
   }
 }
 

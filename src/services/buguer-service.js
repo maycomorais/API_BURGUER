@@ -1,7 +1,9 @@
-import burguer from "../database/index.js";
-import Burguer from "../models/burguer-model.js";
+// import burguer from "../database/index.js";
+import Burguer from '../models/burguer-model.js'
 
 class BurguerServices {
+
+  // Listar todos
   async listarTodos() {
     const burguerMongo = await Burguer.find();
 
@@ -12,8 +14,9 @@ class BurguerServices {
     return burguerMongo;
   }
 
-  listarPorId({ id }) {
-    const burguerSelecionado = burguer.find((elem) => elem.id === id);
+  // Listar por ID
+  async listarPorId({ id }) {
+    const burguerSelecionado = await Burguer.findById(id).exec();
 
     if (!burguerSelecionado) {
       throw { status: 404, message: "Nenhum produto encontrado" };
@@ -22,16 +25,9 @@ class BurguerServices {
     return burguerSelecionado;
   }
 
-  criarNovoBurguer({ nome, ingredientes, foto, preco, categoria }) {
-    const novoId =
-      burguer.length === 0 ? 1 : burguer[burguer.length - 1].id + 1;
-
-    if (!nome || !ingredientes || !foto || !preco || !categoria) {
-      throw { status: 422, message: "Dados de Cadastros Incompletos" };
-    }
-
+  // Criar nova Paleta
+  async criarNovoBurguer({ nome, ingredientes, foto, preco, categoria }) {
     const novoBurguer = {
-      id: novoId,
       nome,
       ingredientes,
       foto,
@@ -39,17 +35,18 @@ class BurguerServices {
       categoria,
     };
 
-    burguer.push(novoBurguer);
+    try{
+      const burguer = await Burguer.create(novoBurguer);
 
-    return novoBurguer;
-  }
-  refreshBurguer({ id, nome, ingredientes, foto, preco, categoria }) {
-    if (!nome || !ingredientes || !foto || !preco || !categoria) {
-      throw { status: 422, message: "Dados de Cadastros Incompletos" };
+      return novoBurguer;
+    }catch (error) {
+      throw error;
     }
+  }
 
+  // atualizar 
+  async refreshBurguer({ id, nome, ingredientes, foto, preco, categoria }) {
     const burguerRefresh = {
-      id,
       nome,
       ingredientes,
       foto,
@@ -57,16 +54,21 @@ class BurguerServices {
       categoria,
     };
 
-    const indexBurguer = burguer.findIndex((elem) => elem.id === id);
+    try {
+      await Burguer.updateOne({ _id: id }, burguerRefresh);
 
-    burguer[indexBurguer] = burguerRefresh;
+      const burguer = await Burguer.findById(id);
 
-    return burguerRefresh;
+      return burguer;
+    } catch (error) {
+      throw error;
+    }
+    
   }
-  deleteBurguer({ id }) {
-    const indexBurguer = burguer.findIndex((elem) => elem.id === id);
+  async deleteBurguer({ id }) {
+    const burguer = await Burguer.findByIdAndDelete(id);
 
-    burguer.splice(indexBurguer, 1);
+    return burguer;
   }
 }
 
